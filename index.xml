@@ -1,0 +1,14 @@
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+ <channel>
+   <title>nonocast</title>
+   <link>http://nonocast.cn/</link>
+   <description>Recent content on nonocast</description>
+   <generator>Hugo -- gohugo.io</generator>
+   <language>en-us</language>
+   
+       <atom:link href="http://nonocast.cn/index.xml" rel="self" type="application/rss+xml" />
+   
+   
+ </channel>
+</rss>
