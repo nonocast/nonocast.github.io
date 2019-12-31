@@ -1,13 +1,14 @@
 
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
  <channel>
-   <title>Tags on nonocast</title>
-   <link>http://nonocast.cn/tags/</link>
-   <description>Recent content in Tags on nonocast</description>
+   <title>Posts on nonocast</title>
+   <link>http://nonocast.cn/posts/</link>
+   <description>Recent content in Posts on nonocast</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
+   <lastBuildDate>Tue, 31 Dec 2019 16:54:33 +0800</lastBuildDate>
    
-       <atom:link href="http://nonocast.cn/tags/index.xml" rel="self" type="application/rss+xml" />
+       <atom:link href="http://nonocast.cn/posts/index.xml" rel="self" type="application/rss+xml" />
    
    
      <item>
