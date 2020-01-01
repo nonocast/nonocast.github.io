@@ -75,7 +75,8 @@ DB_PASS=123456
 &lt;li&gt;如果没有指定path, 则加载.env&lt;/li&gt;
 &lt;li&gt;或者手动指定path, 但不会默认加载.env&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;最后, .env会涉及隐私, 所以需要在.gitignore中排除.env*。&lt;/p&gt;</description>
+&lt;p&gt;最后, .env会涉及隐私, 所以需要在.gitignore中排除.env*。&lt;/p&gt;
+&lt;p&gt;具体代码见&lt;a href=&#34;https://github.com/nonocast/hello-node-config&#34;&gt;nonocast/hello-node-config&lt;/a&gt;&lt;/p&gt;</description>
      </item>
    
      <item>
