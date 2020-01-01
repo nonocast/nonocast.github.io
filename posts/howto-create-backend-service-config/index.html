@@ -1,0 +1,176 @@
+<!doctype html>
+
+<html lang="en-us">
+
+<head>
+  <title>nonocast</title>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="The HTML5 Herald" />
+<meta name="author" content="nonocast" /><meta property="og:title" content="构建完整web服务 - Config" />
+<meta property="og:description" content="通过config和dotenv实现在不同模式下的配置。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://nonocast.cn/posts/howto-create-backend-service-config/" />
+<meta property="article:published_time" content="2020-01-01T22:43:21+08:00" />
+<meta property="article:modified_time" content="2020-01-01T22:43:21+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="构建完整web服务 - Config"/>
+<meta name="twitter:description" content="通过config和dotenv实现在不同模式下的配置。"/>
+
+<meta name="generator" content="Hugo 0.62.0" />
+    
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="http://nonocast.cn/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  <link rel="stylesheet" type="text/css" href="/css/styles.css" /></head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="/">nonocast</a>
+            </h1>
+
+      <ul id="social-media">
+             <li>
+               <a href="https://github.com/nonocast" title="GitHub">
+               <i class="fab fa-github fa-lg"></i>
+               </a>
+             </li>
+             <li>
+               <a href="https://twitter.com/@nonocast" title="Twitter">
+               <i class="fab fa-twitter fa-lg"></i>
+               </a>
+             </li>
+      </ul>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+    </ul>
+</nav>
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>构建完整web服务 - Config</h1>
+
+    
+        <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2020-01-01T22:43:21&#43;08:00">Jan 1, 2020</time>
+        </li>
+        
+
+        
+
+        <li>One minute read</li>
+    </ul>
+</aside>
+
+    
+
+    <p>通过config和dotenv实现在不同模式下的配置。</p>
+<p>配置依赖于当前的NODE_ENV, 程序应将默认值设置为development。
+我们一般把常规配置项放在config内，在env中放入私密的账号信息以及相关的环境变量。</p>
+<pre><code>- config
+  - default.yaml
+  - development.yaml
+  - production.yaml
+  - test.yaml
+- src
+- test
+- .env
+- .env.production
+- .env.test
+</code></pre><p>config/default.yaml</p>
+<pre><code>msg: 'default yaml'
+</code></pre><p>config/test.yaml</p>
+<pre><code>msg: 'test yaml'
+</code></pre><p>.env</p>
+<pre><code>DEBUG=app*
+DB_USER=root
+DB_PASS=000000
+</code></pre><p>.env.test</p>
+<pre><code>DEBUG=app*
+DB_USER=test
+DB_PASS=123456
+</code></pre><p>app.js</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;dotenv&#39;</span>).<span style="color:#a6e22e">config</span>();
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;config&#39;</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">debug</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;debug&#39;</span>)(<span style="color:#e6db74">&#39;app&#39;</span>);
+
+<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">NODE_ENV</span>) {
+  <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">NODE_ENV</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;development&#39;</span>;
+}
+
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">NODE_ENV</span>);
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;msg&#39;</span>));
+
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">DB_USER</span>);
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">DB_PASS</span>);
+</code></pre></div><p>test.js</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;dotenv&#39;</span>).<span style="color:#a6e22e">config</span>({ <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;.env.test&#39;</span> });
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;config&#39;</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">debug</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;debug&#39;</span>)(<span style="color:#e6db74">&#39;app&#39;</span>);
+
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">NODE_ENV</span>);
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;msg&#39;</span>));
+
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">DB_USER</span>);
+<span style="color:#a6e22e">debug</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">DB_PASS</span>);
+</code></pre></div><p>config是通过NODE_ENV加载不同的配置，</p>
+<ul>
+<li>首先加载__dirname/config/default.yaml</li>
+<li>然后__dirname/config/NODE_ENV.yaml覆盖</li>
+</ul>
+<p>dotenv略有不同,</p>
+<ul>
+<li>如果没有指定path, 则加载.env</li>
+<li>或者手动指定path, 但不会默认加载.env</li>
+</ul>
+<p>最后, .env会涉及隐私, 所以需要在.gitignore中排除.env*。</p>
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="http://nonocast.cn/posts/howto-create-backend-service-logging/"><i class="fa fa-chevron-circle-left"></i> 构建完整web服务 - Logging</a>
+        </li>
+        
+        
+    </ul>
+</section>
+    
+    
+
+
+
+
+
+</main>
+    <footer>
+        <h6> |
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="http://nonocast.cn/index.xml">Subscribe </a></h6>
+    </footer>
+</div>
+<script src="/js/scripts.js"></script>
+
+</body>
+
+</html>
+
