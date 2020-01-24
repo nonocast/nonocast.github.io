@@ -62,7 +62,11 @@
      ...
    }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后关键词参考官网就行了, 移步 &lt;a href=&#34;https://jsdoc.app/index.html&#34;&gt;Use JSDoc: Index&lt;/a&gt;&lt;/p&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后关键词参考官网就行了, 移步 &lt;a href=&#34;https://jsdoc.app/index.html&#34;&gt;Use JSDoc: Index&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;参考:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/aae85ef3513c&#34;&gt;JSDoc在Node.js下的部署 - 简书&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
      </item>
    
      <item>
