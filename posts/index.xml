@@ -6,10 +6,65 @@
    <description>Recent content in Posts on nonocast</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
-   <lastBuildDate>Wed, 01 Jan 2020 22:43:21 +0800</lastBuildDate>
+   <lastBuildDate>Sat, 25 Jan 2020 02:53:21 +0800</lastBuildDate>
    
        <atom:link href="http://nonocast.cn/posts/index.xml" rel="self" type="application/rss+xml" />
    
+   
+     <item>
+       <title>构建完整web服务 - jsdoc</title>
+       <link>http://nonocast.cn/posts/howto-create-backend-service-jsdoc/</link>
+       <pubDate>Sat, 25 Jan 2020 02:53:21 +0800</pubDate>
+       
+       <guid>http://nonocast.cn/posts/howto-create-backend-service-jsdoc/</guid>
+       <description>&lt;p&gt;通过jsdoc实现node的日志生成。&lt;/p&gt;
+&lt;p&gt;js是弱类型，就一定需要用文档，日志，单元测试来约束，弱类型写起来一时爽，但后期很容易崩，写好日志是必不可少的一环。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;yarn add jsdoc docdash&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;docdash是一个jsdoc的template, 能够生成更加友好的style。&lt;/p&gt;
+&lt;p&gt;然后配上jsdoc.conf&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;{
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;tags&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;allowUnknownTags&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+  },
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;source&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;include&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./src&amp;#34;&lt;/span&gt;],
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;includePattern&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;.js$&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;excludePattern&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;(node_modules/|docs)&amp;#34;&lt;/span&gt;
+  },
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;plugins&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;plugins/markdown&amp;#34;&lt;/span&gt;],
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;opts&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;recurse&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;verbose&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;encoding&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;utf8&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;template&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;node_modules/docdash&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;destination&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;./jsdoc/&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;readme&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;README.md&amp;#34;&lt;/span&gt;
+  },
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;templates&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cleverLinks&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;,
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;monospaceLinks&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;最后在package.json中加上,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+  ...
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jsdoc&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jsdoc -c jsdoc.json&amp;#34;&lt;/span&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;基本就ok了。&lt;/p&gt;
+&lt;p&gt;然后来看怎么写注释:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/** 
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * 这是一个Class的注释
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;App&lt;/span&gt; {
+  &lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;   * 这是一个方法的注释
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;   */&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;() {
+     ...
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后关键词参考官网就行了, 移步 &lt;a href=&#34;https://jsdoc.app/index.html&#34;&gt;Use JSDoc: Index&lt;/a&gt;&lt;/p&gt;</description>
+     </item>
    
      <item>
        <title>构建完整web服务 - Config</title>
@@ -502,16 +557,32 @@ DB_PASS=123456
 &lt;li&gt;Nodejs&lt;/li&gt;
 &lt;li&gt;Koajs&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;heading-1&#34;&gt;方面&lt;/h2&gt;
+&lt;h2 id=&#34;heading-1&#34;&gt;话题&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;开发环境 (vscode, prettier, eslint)&lt;/li&gt;
-&lt;li&gt;配置&lt;/li&gt;
-&lt;li&gt;类型检查&lt;/li&gt;
-&lt;li&gt;文档&lt;/li&gt;
-&lt;li&gt;日志&lt;/li&gt;
-&lt;li&gt;单元测试&lt;/li&gt;
-&lt;li&gt;验证和授权&lt;/li&gt;
-&lt;li&gt;部署&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类型检查 (schema)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;配置 (config)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;日志 (logging)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;文档 (jsdoc)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;开发环境 (vscode)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;单元测试&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;验证和授权&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;部署&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;</description>
      </item>
    
