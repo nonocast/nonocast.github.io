@@ -6,10 +6,32 @@
    <description>Recent content in Posts on nonocast</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
-   <lastBuildDate>Sat, 25 Jan 2020 02:53:21 +0800</lastBuildDate>
+   <lastBuildDate>Thu, 30 Jan 2020 09:37:00 +0800</lastBuildDate>
    
        <atom:link href="http://nonocast.cn/posts/index.xml" rel="self" type="application/rss+xml" />
    
+   
+     <item>
+       <title>Reading list</title>
+       <link>http://nonocast.cn/posts/reading-list/</link>
+       <pubDate>Thu, 30 Jan 2020 09:37:00 +0800</pubDate>
+       
+       <guid>http://nonocast.cn/posts/reading-list/</guid>
+       <description>&lt;p&gt;持续推荐一些值得学习的书和视频。&lt;/p&gt;
+&lt;h1 id=&#34;1-crashcoursecomputer-science&#34;&gt;1. CrashCourse/Computer Science&lt;/h1&gt;
+&lt;p&gt;Crash Course出品的41集计算机通识, 差不多帮你刷了一遍大学课程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://nonocast.cn/img/reading-list-01.jpg&#34; style=&#34;width:60%&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.bilibili.com/video/av21376839&#34;&gt;bilibili&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/playlist?list=PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo&#34;&gt;youtube&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;2-andrew-ngmachine-learning&#34;&gt;2. Andrew Ng/Machine Learning&lt;/h1&gt;
+&lt;p&gt;机器学习的入门课程, 讲解的很细致, 深入浅出。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://nonocast.cn/img/reading-list-02.jpg&#34; style=&#34;width:60%&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.bilibili.com/video/av9912938&#34;&gt;bilibili&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+     </item>
    
      <item>
        <title>构建完整web服务 - jsdoc</title>
