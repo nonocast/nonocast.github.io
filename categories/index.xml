@@ -11,6 +11,310 @@
    
    
      <item>
+       <title>Hello Git</title>
+       <link>http://nonocast.cn/posts/hello-git/</link>
+       <pubDate>Tue, 11 Feb 2020 11:51:00 +0800</pubDate>
+       
+       <guid>http://nonocast.cn/posts/hello-git/</guid>
+       <description>&lt;p&gt;Git 学习。&lt;/p&gt;
+&lt;p&gt;先来看一个视频&lt;a href=&#34;https://www.youtube.com/watch?v=EejUbjFXm-g&#34;&gt;Git内部是如何工作的？Git的内部数据结构&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;what-is-git&#34;&gt;What is git?&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;ref: https://github.com/git/git/blob/master/README.md&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Porcelain (厕所的瓷砖, 指露在外面的意思, 或者说已经组合好的，面向用户的指令)
+&lt;ul&gt;
+&lt;li&gt;user-friendly commands: init, add, commit, branch, merge, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Plumbing (修水管的工具, 指藏在后面的意思, 面向开发者的组件)
+&lt;ul&gt;
+&lt;li&gt;bunch of verbs that do low level work: hash-object, update-index, write-tree, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;补充:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;定义: git 本身并不单纯是revision control system， 更主要的使用来做content tracker, 只是很多人，包括作者本身用它来做revision control&lt;/li&gt;
+&lt;li&gt;Code Review: 需要工具加持&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;发展过程:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;diff and patch&lt;/li&gt;
+&lt;li&gt;Tranditional SCM, Server Repo&lt;/li&gt;
+&lt;li&gt;Distributed SCM, Git&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;git-database&#34;&gt;Git Database&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Content addressable filesystem&lt;/li&gt;
+&lt;li&gt;Simple key-value data store&lt;/li&gt;
+&lt;li&gt;Key: SHA-1 hash (Everything is hashed)
+&lt;ul&gt;
+&lt;li&gt;20 bytes, 40 hex, &lt;strong&gt;160 bit&lt;/strong&gt;, 2.9e48 distinct keys&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Value: binary files
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Commits&lt;/strong&gt;: Actual git commits&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Trees&lt;/strong&gt;: Structure of file system&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Blobs&lt;/strong&gt;: content of files/data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;git-init&#34;&gt;git init&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  hello-git mkdir demo1
+➜  hello-git cd demo1 
+➜  demo1 git init 
+Initialized empty Git repository in /Users/nonocast/Desktop/hello-git/demo1/.git/
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git status
+On branch master
+
+No commits yet
+
+nothing to commit &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;create/copy files and use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git add&amp;#34;&lt;/span&gt; to track&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; tree .git
+.git
+├── HEAD
+├── config
+├── description
+├── hooks
+│   ├── ...
+├── info
+│   └── exclude
+├── objects
+│   ├── info
+│   └── pack
+└── refs
+    ├── heads
+    └── tags
+
+&lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; directories, &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt; files
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;等同于&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo2 mkdir .git
+➜  demo2 echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ref: refs/heads/master&amp;#39;&lt;/span&gt; &amp;gt; .git/HEAD
+➜  demo2 mkdir -p .git/objects/
+➜  demo2 mkdir -p .git/refs/
+➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git status
+On branch master
+
+No commits yet
+
+nothing to commit &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;create/copy files and use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git add&amp;#34;&lt;/span&gt; to track&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;手动的方式你会发现，其实最小最小的git repo是1个文件加2个目录。&lt;/p&gt;
+&lt;h3 id=&#34;git-add&#34;&gt;git add&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt; &amp;gt; hello.txt
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git add hello.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;你可以观察到.git/objects下会多出一个目录和一个文件，这个称为刚才文件内容的blob, 目录加上文件名40个字符构成SHA1 hash, 可以根据这个SHA1 hash查看对应文件的内容,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git cat-file -p 557d
+Hello World
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;也可以尝试根据文件内容获取SHA1 hash, 与文件名和文件信息无关&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello World&amp;#34;&lt;/span&gt; | git hash-object --stdin
+557db03de997c86a4a028e1ebd3a1ceb225be238
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;文件信息和内容是分开的，&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git ls-files --stage
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 557db03de997c86a4a028e1ebd3a1ceb225be238 0	hello.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;area--workflow&#34;&gt;Area &amp;amp; Workflow&lt;/h3&gt;
+&lt;p&gt;Area:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Working Directory&lt;/li&gt;
+&lt;li&gt;Staging Area&lt;/li&gt;
+&lt;li&gt;.git directory (Repository)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Workflow:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;git add: Working &amp;gt; Staging&lt;/li&gt;
+&lt;li&gt;git commit: Staging &amp;gt; Repository&lt;/li&gt;
+&lt;li&gt;git checkout: Working &amp;lt; Repository&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Staging Area对应到.git/index&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ file .git/index
+.git/index: Git index, version 2, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; entries
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git ls-files --stage
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 557db03de997c86a4a028e1ebd3a1ceb225be238 0	hello.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果需要从操作index, 即操作Staging Area&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;git rm --cached hello.txt
+git update-index --add --cacheinfo &lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; &amp;lt;hash&amp;gt; hello.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;现在回过来看如何手动git add&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; tree .git
+.git
+├── HEAD
+├── objects
+│   └── &lt;span style=&#34;color:#ae81ff&#34;&gt;55&lt;/span&gt;
+│       └── 7db03de997c86a4a028e1ebd3a1ceb225be238
+└── refs
+
+&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; directories, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; files
+➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git update-index --add --cacheinfo &lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 557db03de997c86a4a028e1ebd3a1ceb225be238 hello.txt
+➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git rm --cached &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to unstage&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+
+	new file:   hello.txt
+
+Changes not staged &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; commit:
+  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git add/rm &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to update what will be committed&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;use &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;git checkout -- &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to discard changes in working directory&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+
+	deleted:    hello.txt
+
+➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git checkout -- hello.txt
+➜  demo2 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ cat hello.txt 
+Hello World
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;显示deleted: hello.txt, 是因为Staging存在的hello.txt不存在于Working Area中, 然后通过checkout把这个文件从Repository中写到Working Area中。&lt;/p&gt;
+&lt;h2 id=&#34;git-commit&#34;&gt;git commit&lt;/h2&gt;
+&lt;p&gt;git commit 后会生成两个文件, 一个tree, 一个commit&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git log                          
+commit 1a4dac33dcf0f20af514f0302a439765162cc75b &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 02:50:28 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    initial
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file
+usage: ...
+
+&amp;lt;type&amp;gt; can be one of: blob, tree, commit, tag
+    -t                    show object type
+    -s                    show object size
+    -e                    exit with zero when there&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s no error
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    -p                    pretty-print object&amp;#39;&lt;/span&gt;s content
+    ...
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -t 1a4d
+commit
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -p 1a4d
+tree 97b49d4c943e3715fe30f141cc6f27a8548cee0e
+author nonocast &amp;lt;nonocast@gmail.com&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1581447028&lt;/span&gt; +0800
+committer nonocast &amp;lt;nonocast@gmail.com&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1581447028&lt;/span&gt; +0800
+
+initial
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -t 97b4
+tree
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -p 97b4
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; blob 557db03de997c86a4a028e1ebd3a1ceb225be238	hello.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;查看所有objects,&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file --batch-check --batch-all-objects      
+1a4dac33dcf0f20af514f0302a439765162cc75b commit &lt;span style=&#34;color:#ae81ff&#34;&gt;166&lt;/span&gt;
+557db03de997c86a4a028e1ebd3a1ceb225be238 blob &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt;
+97b49d4c943e3715fe30f141cc6f27a8548cee0e tree &lt;span style=&#34;color:#ae81ff&#34;&gt;37&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;git logs 的起点是 &lt;code&gt;HEAD -&amp;gt; refs/master -&amp;gt; commit&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;commit-again&#34;&gt;Commit again&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; mkdir src
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;echo &amp;#39;hello world&amp;#39;&amp;#34;&lt;/span&gt; &amp;gt; src/hello.sh
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ tree .
+.
+├── hello.txt
+└── src
+    └── hello.sh
+
+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; directory, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; files
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git add .
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git ls-files --stage 
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 557db03de997c86a4a028e1ebd3a1ceb225be238 0	hello.txt
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 59c1fdfa8cd0b24760f0577903d0ac6cbb9b35e2 0	src/hello.sh
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; ✗ git commit -m &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;add shell script&amp;#39;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;master 5708e5b&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; add shell script
+ &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; file changed, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; insertion&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;+&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+ create mode &lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; src/hello.sh
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git log 
+commit 5708e5b09d2d36cc1f0452932925266e3dd9d4a5 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 03:10:35 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    add shell script
+
+commit 1a4dac33dcf0f20af514f0302a439765162cc75b
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 02:50:28 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    initial
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -p &lt;span style=&#34;color:#ae81ff&#34;&gt;5708&lt;/span&gt;
+tree 46dc4ca4ec01d621e4a9e81f114a7b85474b0c22
+parent 1a4dac33dcf0f20af514f0302a439765162cc75b
+author nonocast &amp;lt;nonocast@gmail.com&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1581448235&lt;/span&gt; +0800
+committer nonocast &amp;lt;nonocast@gmail.com&amp;gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1581448235&lt;/span&gt; +0800
+
+add shell script
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -p 46dc
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; blob 557db03de997c86a4a028e1ebd3a1ceb225be238	hello.txt
+&lt;span style=&#34;color:#ae81ff&#34;&gt;040000&lt;/span&gt; tree c139cb17fbafa806c82102a32f640e94e54aa93d	src
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git cat-file -p c139
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; blob 59c1fdfa8cd0b24760f0577903d0ac6cbb9b35e2	hello.sh
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git ls-files --stage
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 557db03de997c86a4a028e1ebd3a1ceb225be238 0	hello.txt
+&lt;span style=&#34;color:#ae81ff&#34;&gt;100644&lt;/span&gt; 59c1fdfa8cd0b24760f0577903d0ac6cbb9b35e2 0	src/hello.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;index需要等到下次add会做lazy update, commit并不会clean index, 这个不很重要, 知道就行。&lt;/p&gt;
+&lt;p&gt;所以:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;File content -&amp;gt; blob&lt;/li&gt;
+&lt;li&gt;Directory -&amp;gt; tree (藏在tree的文件路径中，不单独保存)&lt;/li&gt;
+&lt;li&gt;snapshot of current file system -&amp;gt; commit&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Directed Acyclic Graph (有向无环图)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;N-ary tree (N叉树)&lt;/li&gt;
+&lt;li&gt;Linked List (链表)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;rollback&#34;&gt;Rollback&lt;/h2&gt;
+&lt;p&gt;git revert会增加一个commit表示rollback, 重点是可以rollback这个rollback&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git revert HEAD
+
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; git log   
+commit 774072600e135ba902565c17cdfe23645dc17214 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 03:24:52 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    Rollback Second Commit
+    Revert &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;add shell script&amp;#34;&lt;/span&gt;
+    
+    This reverts commit 5708e5b09d2d36cc1f0452932925266e3dd9d4a5.
+
+commit 5708e5b09d2d36cc1f0452932925266e3dd9d4a5
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 03:10:35 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    add shell script
+
+commit 1a4dac33dcf0f20af514f0302a439765162cc75b
+Author: nonocast &amp;lt;nonocast@gmail.com&amp;gt;
+Date:   Wed Feb &lt;span style=&#34;color:#ae81ff&#34;&gt;12&lt;/span&gt; 02:50:28 &lt;span style=&#34;color:#ae81ff&#34;&gt;2020&lt;/span&gt; +0800
+
+    initial
+➜  demo1 git:&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;master&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;留下git reset的三种方式, mixed, soft和hard。&lt;/p&gt;
+&lt;h2 id=&#34;branch&#34;&gt;Branch&lt;/h2&gt;
+&lt;p&gt;branch就是一个refs, 非常cheap.&lt;/p&gt;
+&lt;h2 id=&#34;merge-important&#34;&gt;Merge (Important!)&lt;/h2&gt;
+&lt;p&gt;merge的过程:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Find intersection of 2 linked lists (找到两个linked list共同的base(commit节点))&lt;/li&gt;
+&lt;li&gt;找到两个轨迹中hash不同的文件，然后做diff, 然后apply到Working Area&lt;/li&gt;
+&lt;li&gt;然后产生Conflicts, 这时候Repository不会发生任何变化&lt;/li&gt;
+&lt;li&gt;merge成功后会产生一个commit, 这个commit有两个parent&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;git-is-the-stupid-content-tracker&#34;&gt;Git is the stupid content tracker&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In many ways you can just see git as a filesystem - it&#39;s content-
+addressable, and it has a notion of versioning, but I really really
+designed it coming at the problem from the viewpoint of a &lt;em&gt;filesystem&lt;/em&gt;
+person (hey, kernels is what I do), and I actually have absolutely &lt;em&gt;zero&lt;/em&gt;
+interest in creating a traditional SCM system.&lt;/p&gt;
+&lt;p&gt;&amp;mdash; &lt;strong&gt;Linus Torvalds&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://marc.info/?l=linux-kernel&amp;amp;m=111314792424707&#34;&gt;https://marc.info/?l=linux-kernel&amp;amp;m=111314792424707&lt;/a&gt;&lt;/p&gt;</description>
+     </item>
+   
+     <item>
        <title>Unit Test: Sinon</title>
        <link>http://nonocast.cn/posts/unit-test-sinon/</link>
        <pubDate>Fri, 31 Jan 2020 16:57:00 +0800</pubDate>
@@ -115,7 +419,10 @@ Works with any unit testing framework.&lt;/p&gt;
     &lt;span style=&#34;color:#a6e22e&#34;&gt;sinon&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;restore&lt;/span&gt;();
   });
 });
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;参考:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zcfy.cc/article/mongoose-models-and-unit-tests-the-definitive-guide-codeutopia&#34;&gt;Mongoose 单元测试: 权威指南| CodeUtopia - 众成翻译&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
      </item>
    
      <item>
